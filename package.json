@@ -15,6 +15,7 @@
     "ingest": "tsx -r dotenv/config scripts/ingest-data.ts"
   },
   "dependencies": {
+    "@koush/wrtc": "^0.5.3",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@pinecone-database/pinecone": "0.0.12",
     "@radix-ui/react-accordion": "^1.1.1",
