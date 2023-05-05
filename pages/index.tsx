@@ -132,7 +132,7 @@ export default function Home() {
   //Create audio 
   const handleAudio = async (text: string) => {
     try {
-      await fetch('https://chat-pi.onrender.com/api/pi/create', {
+      await fetch('http://localhost:8080/api/pi/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ export default function Home() {
           console.log(response);
           //@ts-ignore
           const data = await response.json();
-          console.log(data?.audioURL)
+          console.log(data)
           setAudioURL(data?.audioURL);
         }
       )
@@ -266,13 +266,7 @@ export default function Home() {
             session_id: sessionId,
           }),
         }
-      ).then(async (response) => {
-        setLoading(true);
-        const data = await response.json();
-        console.log(data);
-      }).catch((error) => {
-        console.log(error);
-      })
+      )
 
     }
   }
