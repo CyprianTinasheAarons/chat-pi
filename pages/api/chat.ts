@@ -11,7 +11,6 @@ export default async function handler(
 ) {
   const { question, history } = req.body;
 
-  console.log('question', question);
 
   //only accept post requests
   if (req.method !== 'POST') {
@@ -46,7 +45,6 @@ export default async function handler(
       chat_history: history || [],
     });
 
-    console.log('response', response);
     res.status(200).json(response);
   } catch (error: any) {
     console.log('error', error);

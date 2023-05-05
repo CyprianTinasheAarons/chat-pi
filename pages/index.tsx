@@ -6,11 +6,12 @@ import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
 
-
 export default function Home() {
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [videoID, setVideoID] = useState<string | null>(null);
+  const [audioURL, setAudioURL] = useState<string | null>(null);
   const [messageState, setMessageState] = useState<{
     messages: Message[];
     pending?: string;
@@ -25,6 +26,13 @@ export default function Home() {
     ],
     history: [],
   });
+  const [newMessage, setNewMessage] = useState<{
+    question: string;
+    data: {
+      text: string;
+      sourceDocuments?: Document[];
+    };
+ } | null>(null);
 
   const { messages, history } = messageState;
 
@@ -74,29 +82,16 @@ export default function Home() {
         }),
       });
       const data = await response.json();
-      console.log('data', data);
+
 
       if (data.error) {
         setError(data.error);
       } else {
         handleAudio(data.text);
-        setMessageState((state) => ({
-          ...state,
-          messages: [
-            ...state.messages,
-            {
-              type: 'apiMessage',
-              message: data.text,
-              sourceDocs: data.sourceDocuments,
-            },
-          ],
-          history: [...state.history, [question, data.text]],
-
-        }));
+        setNewMessage({
+          question: question, data: data
+        });
       }
-      console.log('messageState', messageState);
-
-      setLoading(false);
 
       //scroll to bottom
       messageListRef.current?.scrollTo(0, messageListRef.current.scrollHeight);
@@ -119,44 +114,52 @@ export default function Home() {
   //Create audio 
   const handleAudio = async (text: string) => {
     try {
-      await fetch('/api/audio', {
+      await fetch('https://chat-pi.onrender.com/api/pi/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text,
+          text:text,
         }),
-      });
-      const audio = new Audio('.././output.mp3');
-      audio.play();
+      }).then(
+        async (response) => {
+          console.log(response);
+          //@ts-ignore
+          const data = await response.json();
+          console.log(data?.audioURL)
+          setAudioURL(data?.audioURL);
+        }
+      )
       
     } catch (error) {
       console.log('error', error);
     }
   }
 
-//   const response = await axios.post(url, JSON.stringify(data), {
-//     headers: headers,
-//     responseType: 'stream',
-//   });
+  useEffect(() => {
+    if (audioURL) {
+      setLoading(false);
+      //@ts-ignore
+      setMessageState((state) => ({
+        ...state,
+        messages: [
+          ...state.messages,
+          {
+            type: 'apiMessage',
+            message: newMessage?.data?.text,
+            sourceDocs: newMessage?.data?.sourceDocuments,
+          },
+        ],
+        history: [...state.history, [newMessage?.question, newMessage?.data?.text]],
 
-//   const writer = fs.createWriteStream('output.mp3');
+      }));
+      //play audio
+      const audio = new Audio(audioURL);
+      audio.play();
+    }
+  }, [audioURL]);
 
-//   response.data.pipe(writer);
-
-//   writer.on('finish', () => {
-//     res.send('File saved successfully!');
-//   });
-
-//   writer.on('error', (error) => {
-//     res.status(500).send('Error occurred while saving file');
-//   });
-// } catch (error) {
-//   console.error(error);
-//   res.status(500).send('Error occurred while fetching speech data');
-// }
-  //how do i get the audio to play on the client side?
 
   return (
     <>
@@ -170,8 +173,9 @@ export default function Home() {
                   <video className='absolute object-cover sm:w-96 sm:h-96 w-64 h-64 rounded-full z-12' autoPlay
                     loop
                     muted
-                    playsInline src='/bur.mp4'></video>
-        
+                   playsInline src={
+                      videoID ? `${videoID}` : '/bur.mp4'
+                    }></video>
                     
                 </div>
               </div>
@@ -188,7 +192,7 @@ export default function Home() {
                       <div key={`chatMessage-${index}`} className={className}>
 
                         <div className={styles.markdownanswer}>
-                          {message.type === 'apiMessage' && (
+                          {message.type === 'apiMessage'  && (
                             <div className="my-2 text-left place-self-start" >
                               <ReactMarkdown className='p-5 sm:text-xl text-sm font-light rounded-tl-none ' linkTarget="_blank">
                                 {message.message}
@@ -210,9 +214,11 @@ export default function Home() {
                 })}
               </div>
             </div>
+
             <div className="absolute bottom-0 left-0 w-full pt-6 border-transparent bg-gradient-to-b from-transparent via-white to-white  md:pt-2">
               <div className={styles.center}>
                 <div className={styles.cloudform}>
+     
                   <form onSubmit={handleSubmit}>
                     <textarea
                       disabled={loading}
@@ -256,6 +262,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            
             {error && (
               <div className="p-4 border border-red-400 rounded-md">
                 <p className="text-red-500">{error}</p>
