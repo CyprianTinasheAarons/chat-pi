@@ -112,40 +112,6 @@ export default function Home() {
       e.preventDefault();
     }
   };
-
-  const handleConnect = async (event: any) => {
-    event.preventDefault();
-    try {
-      await fetch('/api/stream', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: ""
-      });
-
-    }
-    catch (error) {
-      console.log('error', error);
-    }
-    
-  };
-
-  const handleTalk = async (event: any) => {
-    event.preventDefault();
-    try {
-      await fetch('/api/stream', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: ""
-      });
-
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
  
   return (
     <>
@@ -164,10 +130,6 @@ export default function Home() {
             </div>
           </div>
 
-          <div>
-            <button onClick={handleConnect} className='px-4 py-2 m-2 text-white bg-purple-500 rounded-md'>Connect</button>
-            <button onClick={handleTalk} className='px-4 py-2 m-2 text-white bg-purple-500 rounded-md'>Talk</button>
-          </div>
           <main className={styles.main}>
             <div className={styles.cloud}>
               <div ref={messageListRef} className={styles.messagelist}>
