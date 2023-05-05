@@ -132,7 +132,7 @@ export default function Home() {
   //Create audio 
   const handleAudio = async (text: string) => {
     try {
-      await fetch('http://localhost:8080/api/pi/create', {
+      await fetch('https://chat-pi.onrender.com/api/pi/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
