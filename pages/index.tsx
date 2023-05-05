@@ -114,7 +114,7 @@ export default function Home() {
       //scroll to bottom
       messageListRef.current?.scrollTo(0, messageListRef.current.scrollHeight);
     } catch (error) {
-     
+
       setError('An error occurred while fetching the data. Please try again.');
       console.log('error', error);
     }
@@ -208,7 +208,7 @@ export default function Home() {
         body: JSON.stringify({ answer: sessionClientAnswer, session_id: sessionId })
       });
   }
-  
+
   const createPeerConnection = async (offer: any, iceServers: any) => {
     let pc = new RTCPeerConnection({ iceServers });
     if (!peerConnection) {
@@ -245,28 +245,36 @@ export default function Home() {
     }
 
     if (peerConnection?.signalingState === 'stable' || peerConnection?.iceConnectionState === 'connected') {
-      await fetch(
-        `${API_URL}/talks/streams/${streamId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Basic ${API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            script: {
-              type: "audio",
-              audio_url:
-                audioURL,
+      try {
+        await fetch(
+          `${API_URL}/talks/streams/${streamId}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Basic ${API_KEY}`,
+              "Content-Type": "application/json",
             },
-            driver_url: "bank://lively/",
-            config: {
-              stitch: true,
-            },
-            session_id: sessionId,
-          }),
-        }
-      )
+            body: JSON.stringify({
+              script: {
+                type: "audio",
+                audio_url:
+                  audioURL,
+              },
+              driver_url: "bank://lively/",
+              config: {
+                stitch: true,
+              },
+              session_id: sessionId,
+            }),
+          }
+        )
+      } catch (e) {
+        console.log("error during talk", e);
+        stopAllStreams();
+        closePC();
+        return;
+      }
+
 
     }
   }
@@ -308,7 +316,7 @@ export default function Home() {
     if (!talkVideo || !talkVideo.current) return;
     if (talkVideo.current.srcObject) {
       console.log('stopping video streams');
-       //@ts-ignore
+      //@ts-ignore
       talkVideo.current.srcObject.getTracks().forEach(track => track.stop());
 
       talkVideo.current.srcObject = null;
