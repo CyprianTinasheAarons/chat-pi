@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
 
+
 export default function Home() {
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,7 +19,7 @@ export default function Home() {
   }>({
     messages: [
       {
-        message: 'Hi there, how can I help?',
+        message: 'Hi , how can I help?',
         type: 'apiMessage',
       },
     ],
@@ -78,6 +79,7 @@ export default function Home() {
       if (data.error) {
         setError(data.error);
       } else {
+        handleAudio(data.text);
         setMessageState((state) => ({
           ...state,
           messages: [
@@ -89,6 +91,7 @@ export default function Home() {
             },
           ],
           history: [...state.history, [question, data.text]],
+
         }));
       }
       console.log('messageState', messageState);
@@ -112,7 +115,49 @@ export default function Home() {
       e.preventDefault();
     }
   };
- 
+
+  //Create audio 
+  const handleAudio = async (text: string) => {
+    try {
+      await fetch('/api/audio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+        }),
+      });
+      const audio = new Audio('.././output.mp3');
+      audio.play();
+      
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
+//   const response = await axios.post(url, JSON.stringify(data), {
+//     headers: headers,
+//     responseType: 'stream',
+//   });
+
+//   const writer = fs.createWriteStream('output.mp3');
+
+//   response.data.pipe(writer);
+
+//   writer.on('finish', () => {
+//     res.send('File saved successfully!');
+//   });
+
+//   writer.on('error', (error) => {
+//     res.status(500).send('Error occurred while saving file');
+//   });
+// } catch (error) {
+//   console.error(error);
+//   res.status(500).send('Error occurred while fetching speech data');
+// }
+  //how do i get the audio to play on the client side?
+
   return (
     <>
       <Layout>
@@ -126,9 +171,10 @@ export default function Home() {
                     loop
                     muted
                     playsInline src='/bur.mp4'></video>
+        
+                    
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -143,15 +189,15 @@ export default function Home() {
 
                         <div className={styles.markdownanswer}>
                           {message.type === 'apiMessage' && (
-                            <div className="my-2 text-left place-self-start">
-                              <ReactMarkdown className='p-5 text-xl font-light rounded-tl-none ' linkTarget="_blank">
+                            <div className="my-2 text-left place-self-start" >
+                              <ReactMarkdown className='p-5 sm:text-xl text-sm font-light rounded-tl-none ' linkTarget="_blank">
                                 {message.message}
                               </ReactMarkdown>
                             </div>
                           )}
                           {message.type === 'userMessage' && (
                             <div className="my-2 text-right place-self-start">
-                              <ReactMarkdown className='p-5 text-xl font-light text-purple-500 rounded-tr-none rounded-2xl' linkTarget="_blank">
+                              <ReactMarkdown className='p-5 sm:text-xl text-sm font-light text-purple-500 rounded-tr-none rounded-2xl' linkTarget="_blank">
                                 {message.message}
                               </ReactMarkdown>
                             </div>
