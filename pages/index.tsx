@@ -122,7 +122,10 @@ export default function Home() {
               <div className="relative  group">
                 <div className="absolute transition duration-1000 rounded-full opacity-25 -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 blur group-hover:opacity-50 group-hover:duration-200"></div>
                 <div className='relative  z-10 sm:w-96 sm:h-96 w-64 h-64 bg-gray-100 rounded-full'>
-                  <video className='absolute object-cover sm:w-96 sm:h-96 w-64 h-64 rounded-full z-12' autoPlay loop muted src='/bur.mp4'></video>
+                  <video className='absolute object-cover sm:w-96 sm:h-96 w-64 h-64 rounded-full z-12' autoPlay
+                    loop
+                    muted
+                    playsInline src='/bur.mp4'></video>
                 </div>
               </div>
 
