@@ -119,10 +119,10 @@ export default function Home() {
         <div className="flex flex-col mx-auto ">
           <div className='flex justify-center m-4'>
             <div className='relative isolate'>
-              <div className="relative group">
-                <div className="absolute transition duration-1000 rounded-full opacity-25 -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 blur group-hover:opacity-50 group-hover:duration-200"></div>
-                <div className='relative z-10 w-64 h-64 bg-gray-100 rounded-full'>
-                  <video className='absolute object-cover w-64 h-64 rounded-full z-12' autoPlay loop muted src='/bur.mp4'></video>
+              <div className="relative  group">
+                <div className="absolute transition duration-1000 rounded-full opacity-25 -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 blur group-hover:opacity-50 group-hover:duration-200"></div>
+                <div className='relative  z-10 w-96 h-96 bg-gray-100 rounded-full'>
+                  <video className='absolute object-cover w-96 h-96 rounded-full z-12' autoPlay loop muted src='/bur.mp4'></video>
                   <video id="talk-video" className='absolute object-cover w-64 h-64 rounded-full z-16' autoPlay ></video>
                 </div>
               </div>
@@ -142,14 +142,14 @@ export default function Home() {
                         <div className={styles.markdownanswer}>
                           {message.type === 'apiMessage' && (
                             <div className="my-2 text-left place-self-start">
-                              <ReactMarkdown className='p-5 text-sm rounded-tl-none bg-gray-50 rounded-2xl' linkTarget="_blank">
+                              <ReactMarkdown className='p-5 text-md font-light rounded-tl-none ' linkTarget="_blank">
                                 {message.message}
                               </ReactMarkdown>
                             </div>
                           )}
                           {message.type === 'userMessage' && (
                             <div className="my-2 text-right place-self-start">
-                              <ReactMarkdown className='p-5 text-sm text-white bg-purple-500 rounded-tr-none rounded-2xl' linkTarget="_blank">
+                              <ReactMarkdown className='p-5 text-md font-light text-purple-500 rounded-tr-none rounded-2xl' linkTarget="_blank">
                                 {message.message}
                               </ReactMarkdown>
                             </div>

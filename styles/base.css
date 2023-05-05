@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.video-wrapper{
+      background:url(bg.png);
+      height:500px;
+      background-position: top;
+      }
