@@ -16,6 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [audioURL, setAudioURL] = useState<string | null>(null);
+  //@ts-ignore
   const [audioContext , setAudioContext] = useState<AudioContext>(null);
   const [messageState, setMessageState] = useState<{
     messages: Message[];
@@ -232,8 +233,6 @@ export default function Home() {
                   ></video>
                 </div>
               </div>
-
-
             </div>
           </div>
           <div className='h-12 flex justify-between'>
@@ -254,7 +253,7 @@ export default function Home() {
 
               <circle cx="50%" cy="50%" r="50%" fill="url(#thin-edge-gradient)" />
             </Wave>
-     </div>
+         </div>
           {
             audioURL && (
               <AudioVisualizer

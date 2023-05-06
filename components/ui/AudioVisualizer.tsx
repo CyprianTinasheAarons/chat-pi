@@ -68,7 +68,7 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioContext, audioUr
 
                 const options = {
                     speed: mapValue(dataArray[0], minFrequency, maxFrequency, 0.1, 1),
-                    points: mapValue(dataArray[0], minFrequency, maxFrequency, 1, 10),
+                    points: mapValue(dataArray[0], minFrequency, maxFrequency, 1, 5),
                     height: mapValue(dataArray[0], minAmplitude, maxAmplitude, 1, 20),
                     amplitude: mapValue(dataArray[0], minAmplitude, maxAmplitude, 1, 50),
                 };
