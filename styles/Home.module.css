@@ -88,6 +88,7 @@
   height: 100%;
   overflow-y: scroll;
   border-radius: 0.5rem;
+   padding-bottom: 5rem;
 }
 
 .messagelistloading {
