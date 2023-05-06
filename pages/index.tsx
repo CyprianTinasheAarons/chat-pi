@@ -5,6 +5,7 @@ import { Message } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
+import AudioPlayerWithWaves from '@/components/ui/AudioPlayerWithWaves';
 
 
 export default function Home() {
@@ -163,184 +164,6 @@ export default function Home() {
     }
   }
 
-  //Did Video 
-  //Connect to rpc server
-  let RTCPeerConnection: typeof window.RTCPeerConnection;
-
-  if (typeof window !== 'undefined') {
-    // @ts-ignore
-    RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
-  }
-
-  let sId: any;
-  let sessionId: any;
-  let sessionClientAnswer: any;
-
-  const connect = async () => {
-    if (peerConnection && peerConnection.connectionState === 'connected') {
-      return;
-    }
-
-    stopAllStreams();
-    closePC();
-
-    const sessionResponse = await fetch(`${API_URL}/talks/streams`, {
-      method: 'POST',
-      headers: { 'Authorization': `Basic ${API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source_url: "https://res.cloudinary.com/dqzpz4w3l/image/upload/v1683232752/bushiri-transformed_znyzq1.png"
-      }),
-    });
-
-    const { id: newStreamId, offer, ice_servers: iceServers, session_id: newSessionId } = await sessionResponse.json()
-    setStreamId(newStreamId);
-    sId = newStreamId;
-    sessionId = newSessionId;
-
-
-
-    try {
-      sessionClientAnswer = await createPeerConnection(offer, iceServers);
-      setConnected(true);
-    } catch (e) {
-      console.log('error during streaming setup', e);
-      stopAllStreams();
-      closePC();
-      return;
-    }
-
-    const sdpResponse = await fetch(`${API_URL}/talks/streams/${sId}/sdp`,
-      {
-        method: 'POST',
-        headers: { Authorization: `Basic ${API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answer: sessionClientAnswer, session_id: sessionId })
-      });
-  }
-
-  const createPeerConnection = async (offer: any, iceServers: any) => {
-    let pc = new RTCPeerConnection({ iceServers });
-    if (!peerConnection) {
-
-      //@ts-ignore
-      pc?.addEventListener('icecandidate', onIceCandidate, true);
-      //@ts-ignore
-      pc?.addEventListener('track', onTrack, true);
-
-      setPeerConnection(pc);
-    }
-
-    await pc?.setRemoteDescription(offer);
-    console.log('set remote sdp OK');
-
-    const sessionClientAnswer = await pc?.createAnswer();
-    console.log('create local sdp OK');
-
-    await pc?.setLocalDescription(sessionClientAnswer);
-    console.log('set local sdp OK');
-
-    console.log('peer connection OK', sessionClientAnswer)
-
-    return sessionClientAnswer;
-
-  }
-
-  const talk = async () => {
-
-    console.log("Peer Connection", peerConnection); // Add this line to debug
-    if (!peerConnection) {
-      console.log("Peer Connection is undefined");
-      return;
-    }
-
-    if (peerConnection?.signalingState === 'stable' || peerConnection?.iceConnectionState === 'connected') {
-      try {
-        await fetch(
-          `${API_URL}/talks/streams/${streamId}`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Basic ${API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              script: {
-                type: "audio",
-                audio_url:
-                  audioURL,
-              },
-              driver_url: "bank://lively/",
-              config: {
-                stitch: true,
-              },
-              session_id: sessionId,
-            }),
-          }
-        )
-      } catch (e) {
-        console.log("error during talk", e);
-        stopAllStreams();
-        closePC();
-        return;
-      }
-
-
-    }
-  }
-
-  const onIceCandidate = (event: any) => {
-    console.log('onIceCandidate', event);
-    if (event.candidate) {
-      const { candidate, sdpMid, sdpMLineIndex } = event.candidate;
-
-      fetch(`${API_URL}/talks/streams/${sId}/ice`,
-        {
-          method: 'POST',
-          headers: { Authorization: `Basic ${API_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ candidate, sdpMid, sdpMLineIndex, session_id: sessionId })
-        });
-    }
-  }
-
-
-  const onTrack = (event: any) => {
-    const remoteStream = event.streams[0];
-    setVideoElement(remoteStream);
-  }
-
-  const setVideoElement = (stream: any) => {
-    if (!stream || !talkVideo || !talkVideo.current) return;
-
-    talkVideo.current.srcObject = stream;
-
-    // safari hotfix
-
-    if (talkVideo.current.paused) {
-
-      talkVideo.current.play().then(_ => { }).catch(e => { });
-    }
-  }
-
-  const stopAllStreams = () => {
-    if (!talkVideo || !talkVideo.current) return;
-    if (talkVideo.current.srcObject) {
-      console.log('stopping video streams');
-      //@ts-ignore
-      talkVideo.current.srcObject.getTracks().forEach(track => track.stop());
-
-      talkVideo.current.srcObject = null;
-    }
-  }
-
-  const closePC = () => {
-    if (!peerConnection) return;
-    console.log('stopping peer connection');
-    peerConnection.close();
-    peerConnection.removeEventListener('icecandidate', onIceCandidate, true);
-    console.log('stopped peer connection');
-    if (peerConnection === peerConnection) {
-      setPeerConnection(null);
-    }
-  }
 
 
   useEffect(() => {
@@ -393,10 +216,12 @@ export default function Home() {
                 </div>
               </div>
   
+
             </div>
           </div>
 
 
+   
           <main className={styles.main}>
             <div className={styles.cloud}>
               <div ref={messageListRef} className={styles.messagelist}>
@@ -430,9 +255,11 @@ export default function Home() {
               </div>
               <div ref={messagesEndRef} />
             </div>
-
+     
+              
+            
             <div className="absolute bottom-0 left-0 w-full pt-1 border-transparent bg-gradient-to-b from-transparent via-white to-white  md:pt-2">
-          
+
               <div className={styles.center}>
                 <div className={styles.cloudform}>
 
