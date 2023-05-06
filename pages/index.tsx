@@ -5,7 +5,7 @@ import { Message } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
-import AudioVisualizer from '@/components/ui/AudioVisualizer';
+import { SpectrumVisualizer, SpectrumVisualizerTheme } from 'react-audio-visualizers';
 
 
 export default function Home() {
@@ -215,7 +215,20 @@ export default function Home() {
 
             </div>
           </div>
-
+          {
+            audioURL && (
+              <SpectrumVisualizer
+                audio={audioURL}
+                theme={SpectrumVisualizerTheme.radialSquaredBars}
+                colors={['#009688', '#26a69a']}
+                iconsColor="#26a69a"
+                backgroundColor="white"
+                showMainActionIcon
+                showLoaderIcon
+                highFrequency={8000}
+              />
+            )
+          }
 
 
           <main className={styles.main}>
