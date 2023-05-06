@@ -203,8 +203,8 @@ export default function Home() {
   }, []);
 
   const [options, setOptions] = useState({
-    height: 0,
-    amplitude: 10,
+    height: 100,
+    amplitude: 20,
     speed: 0.15,
     points: 3,
   });
@@ -216,44 +216,51 @@ export default function Home() {
     <>
       <Layout>
 
-        <div className="flex flex-col mx-auto ">
+        <div className="flex flex-col mx-auto mt-4 ">
           
           <div className='flex justify-center m-4 bg-gradient-to-b from-transparent via-white to-white'>
             <div className='sticky '>
               <div className="relative group">
-                <div className="absolute transition duration-1000 rounded-full opacity-25 -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 blur group-hover:opacity-50 group-hover:duration-200"></div>
+
+                <div className='sm:w-64 sm:h-64 w-52 h-52 rounded-full flex justify-center absolute blur-lg    sm:rotate-90 rotate-90  '>
+         
+                      <Wave mask="url(#gradient)"
+                        paused={false}
+                        options={options}>
+                        <defs>
+                          <radialGradient id="thin-edge-gradient" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
+                            <stop offset="0%" stopColor="#5AC8FA" />
+                            <stop offset="25%" stopColor="#4CD964" />
+                            <stop offset="50%" stopColor="blue" />
+                            <stop offset="75%" stopColor="purple" />
+                            <stop offset="85%" stopColor="#FF3B30" />
+                            <stop offset="100%" stopColor="#FF3B30" />
+                          </radialGradient>
+                        </defs>
+
+                        <circle cx="50%" cy="50%" r="50%" fill="url(#thin-edge-gradient)" />
+                      </Wave>
+                    
+                  
+
+
+                </div>
                 <div className='relative  z-10 sm:w-64 sm:h-64 w-52 h-52 bg-gray-100 rounded-full'>
                   
                   <video
-                    className='absolute object-cover sm:w-64 sm:h-64 w-52 h-52 rounded-full z-12' autoPlay
+                    className='absolute object-cover sm:w-64 sm:h-64 w-52 h-52 rounded-full z-12 '
+                    autoPlay={true}
+                    muted={true}
                     playsInline
-
-                    loop
+                    loop={true}
                     src="./bur.mp4"
                   ></video>
                 </div>
               </div>
             </div>
           </div>
-          <div className='h-12 flex justify-between'>
-
-            <Wave mask="url(#gradient)"
-              paused={false}
-              options={options}>
-              <defs>
-                <radialGradient id="thin-edge-gradient" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
-                  <stop offset="0%" stopColor="#5AC8FA" />
-                  <stop offset="25%" stopColor="#4CD964" />
-                  <stop offset="50%" stopColor="blue" />
-                  <stop offset="75%" stopColor="purple" />
-                  <stop offset="85%" stopColor="#FF3B30" />
-                  <stop offset="100%" stopColor="#FF3B30" />
-                </radialGradient>
-              </defs>
-
-              <circle cx="50%" cy="50%" r="50%" fill="url(#thin-edge-gradient)" />
-            </Wave>
-         </div>
+       
+         
           {
             audioURL && (
               <AudioVisualizer
