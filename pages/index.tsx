@@ -5,16 +5,12 @@ import { Message } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
-import AudioPlayerWithWaves from '@/components/ui/AudioPlayerWithWaves';
+import AudioVisualizer from '@/components/ui/AudioVisualizer';
 
 
 export default function Home() {
-  //DID Video
-  const talkVideo = useRef<HTMLVideoElement>(null);
+
   const messagesEndRef = useRef(null);
-  const [streamId, setStreamId] = useState<string | null>(null);
-  const [connected, setConnected] = useState<boolean>(false);
-  const [peerConnection, setPeerConnection] = useState<RTCPeerConnection | null>(null);
   //chat
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -215,13 +211,13 @@ export default function Home() {
                   ></video>
                 </div>
               </div>
-  
+
 
             </div>
           </div>
 
 
-   
+
           <main className={styles.main}>
             <div className={styles.cloud}>
               <div ref={messageListRef} className={styles.messagelist}>
@@ -255,11 +251,7 @@ export default function Home() {
               </div>
               <div ref={messagesEndRef} />
             </div>
-     
-              
-            
             <div className="absolute bottom-0 left-0 w-full pt-1 border-transparent bg-gradient-to-b from-transparent via-white to-white  md:pt-2">
-
               <div className={styles.center}>
                 <div className={styles.cloudform}>
 
