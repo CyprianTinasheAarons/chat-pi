@@ -3476,6 +3476,13 @@
   dependencies:
     "debounce" "^1.2.1"
 
+"react-wavify@^1.8.0":
+  "integrity" "sha512-8Pxd1vLuC5VBUxvWa2EFYsQLZIjY68KxzM4ztw2ZG6PCAnu/d0lQDCIW+mathr/PH2AAt4A2MJHVPuWs/BLP2w=="
+  "resolved" "https://registry.npmjs.org/react-wavify/-/react-wavify-1.8.0.tgz"
+  "version" "1.8.0"
+  dependencies:
+    "prop-types" "^15.8.1"
+
 "react@18.2.0":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
@@ -4150,6 +4157,11 @@
     "is-plain-obj" "^4.0.0"
     "trough" "^2.0.0"
     "vfile" "^5.0.0"
+
+"uninstall@^0.0.0":
+  "integrity" "sha512-pjP/0+A4gsbDVa8XH/S2GZdT9NPJW8NFMy3GI7HnsWG+NAmFSSj3QidNosXBI9cPtxxNExEDdhKFO6sli8K3mA=="
+  "resolved" "https://registry.npmjs.org/uninstall/-/uninstall-0.0.0.tgz"
+  "version" "0.0.0"
 
 "unist-util-generated@^2.0.0":
   "integrity" "sha512-qF72kLmPxAw0oN2fwpWIqbXAVyEqUzDHMsbtPvOudIlUzXYFIeQIuxXQCRCFh22B7cixvU0MG7m3MW8FTq/S+A=="

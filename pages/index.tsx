@@ -5,9 +5,7 @@ import { Message } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
-import { SpectrumVisualizer, SpectrumVisualizerTheme } from 'react-audio-visualizers';
-
-
+import Wave from 'react-wavify';
 export default function Home() {
 
   const messagesEndRef = useRef(null);
@@ -192,16 +190,20 @@ export default function Home() {
     scrollToBottom();
   }, [messageState.messages]);
 
+  
+
   return (
     <>
       <Layout>
 
         <div className="flex flex-col mx-auto ">
+          
           <div className='flex justify-center m-4 bg-gradient-to-b from-transparent via-white to-white'>
             <div className='sticky '>
               <div className="relative group">
                 <div className="absolute transition duration-1000 rounded-full opacity-25 -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 blur group-hover:opacity-50 group-hover:duration-200"></div>
                 <div className='relative  z-10 sm:w-64 sm:h-64 w-52 h-52 bg-gray-100 rounded-full'>
+                  
                   <video
                     className='absolute object-cover sm:w-64 sm:h-64 w-52 h-52 rounded-full z-12' autoPlay
                     playsInline
@@ -215,22 +217,21 @@ export default function Home() {
 
             </div>
           </div>
-          {
-            audioURL && (
-              <SpectrumVisualizer
-                audio={audioURL}
-                theme={SpectrumVisualizerTheme.radialSquaredBars}
-                colors={['#009688', '#26a69a']}
-                iconsColor="#26a69a"
-                backgroundColor="white"
-                showMainActionIcon
-                showLoaderIcon
-                highFrequency={8000}
-              />
-            )
-          }
+     
+          <Wave mask="url(#gradient)">
+            <defs>
+              <radialGradient id="thin-edge-gradient" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
+                <stop offset="0%" stopColor="#5AC8FA" />
+                <stop offset="25%" stopColor="#4CD964" />
+                <stop offset="50%" stopColor="blue" />
+                <stop offset="75%" stopColor="purple" />
+                <stop offset="85%" stopColor="#FF3B30" />
+                <stop offset="100%" stopColor="#FF3B30" />
+              </radialGradient>
+            </defs>
 
-
+            <circle cx="50%" cy="50%" r="50%" fill="url(#thin-edge-gradient)" />
+          </Wave>
           <main className={styles.main}>
             <div className={styles.cloud}>
               <div ref={messageListRef} className={styles.messagelist}>

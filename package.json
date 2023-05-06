@@ -31,7 +31,9 @@
     "react-audio-visualizers": "^0.1.1",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.5",
-    "tailwind-merge": "^1.10.0"
+    "react-wavify": "^1.8.0",
+    "tailwind-merge": "^1.10.0",
+    "uninstall": "^0.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.14.6",
