@@ -6,6 +6,8 @@ import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
 import Wave from 'react-wavify';
+import AudioVisualizer from '@/components/ui/AudioVisualizer';
+
 export default function Home() {
 
   const messagesEndRef = useRef(null);
@@ -14,7 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [audioURL, setAudioURL] = useState<string | null>(null);
-
+  const [audioContext , setAudioContext] = useState<AudioContext>(null);
   const [messageState, setMessageState] = useState<{
     messages: Message[];
     pending?: string;
@@ -180,7 +182,7 @@ export default function Home() {
         ],
         history: [...state.history, [newMessage?.question, newMessage?.data.text]],
       }));
-      audio.play();
+
       setAudioURL(null);
 
     }
@@ -190,6 +192,23 @@ export default function Home() {
     scrollToBottom();
   }, [messageState.messages]);
 
+  //audio visualizer
+  //@ts-ignore
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      //@ts-ignore
+      setAudioContext(() => new (window.AudioContext || window.webkitAudioContext)());
+    }
+  }, []);
+
+  const [options, setOptions] = useState({
+    height: 0,
+    amplitude: 10,
+    speed: 0.15,
+    points: 3,
+  });
+  
+  // const audio = "https://res.cloudinary.com/dqzpz4w3l/video/upload/v1683300186/mi2osnic0eu6ucz8zdb2.mp3"
   
 
   return (
@@ -217,21 +236,34 @@ export default function Home() {
 
             </div>
           </div>
-     
-          <Wave mask="url(#gradient)">
-            <defs>
-              <radialGradient id="thin-edge-gradient" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
-                <stop offset="0%" stopColor="#5AC8FA" />
-                <stop offset="25%" stopColor="#4CD964" />
-                <stop offset="50%" stopColor="blue" />
-                <stop offset="75%" stopColor="purple" />
-                <stop offset="85%" stopColor="#FF3B30" />
-                <stop offset="100%" stopColor="#FF3B30" />
-              </radialGradient>
-            </defs>
+          <div className='h-12 flex justify-between'>
 
-            <circle cx="50%" cy="50%" r="50%" fill="url(#thin-edge-gradient)" />
-          </Wave>
+            <Wave mask="url(#gradient)"
+              paused={false}
+              options={options}>
+              <defs>
+                <radialGradient id="thin-edge-gradient" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
+                  <stop offset="0%" stopColor="#5AC8FA" />
+                  <stop offset="25%" stopColor="#4CD964" />
+                  <stop offset="50%" stopColor="blue" />
+                  <stop offset="75%" stopColor="purple" />
+                  <stop offset="85%" stopColor="#FF3B30" />
+                  <stop offset="100%" stopColor="#FF3B30" />
+                </radialGradient>
+              </defs>
+
+              <circle cx="50%" cy="50%" r="50%" fill="url(#thin-edge-gradient)" />
+            </Wave>
+     </div>
+          {
+            audioURL && (
+              <AudioVisualizer
+                audioContext={audioContext}
+                audioUrl={audioURL}
+                onOptionsChange={setOptions}
+              />
+            )
+          }
           <main className={styles.main}>
             <div className={styles.cloud}>
               <div ref={messageListRef} className={styles.messagelist}>
